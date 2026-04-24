@@ -1,125 +1,66 @@
 # Design Tokens
 
-Semantic values for colors, spacing, and typography. Always use Design Token 2.4 instead of hardcoded values.
+Use this file when selecting color, spacing, or typography values.
 
-## 1. Colors
+## Token Priority
 
-### Text Colors
+1. Use Design Token 2.4 semantic tokens when the project is on 2.4.
+2. Use Design Token 2.1 tokens only when the project is still on 2.1.
+3. Use exact design values only as a last resort and call that out explicitly.
 
-```vue
-<MpText>Default text</MpText>
-<MpText color="text.primary">Primary text</MpText>
-<MpText color="text.secondary">Secondary text</MpText>
-<MpText color="text.warning">Warning text</MpText>
-<MpText color="text.danger">Danger text</MpText>
-<MpText color="text.success">Success text</MpText>
-```
+## Core Color Choices
 
-### Background Colors
+| Need | Preferred Token |
+| --- | --- |
+| Primary text | `text.primary` |
+| Secondary text | `text.secondary` |
+| Warning text | `text.warning` |
+| Danger text | `text.danger` |
+| Success text | `text.success` |
+| Surface background | `background.surface` |
+| Neutral background | `background.neutral` |
+| Strong neutral background | `background.neutral.bold` |
+| Default border | `border.default` |
 
-```vue
-<MpFlex bg="background.surface">Surface Background</MpFlex>
-<MpFlex bg="background.neutral">Neutral Background</MpFlex>
-<MpFlex bg="background.neutral.bold">Neutral Background but bolder</MpFlex>
-```
+## Spacing Scale
 
-### Border Colors
+| Semantic | Token | Value |
+| --- | --- | --- |
+| `4xs` | `0.125` | 2px |
+| `3xs` | `spacing.1` | 4px |
+| `2xs` | `0.375` | 6px |
+| `xs` | `spacing.2` | 8px |
+| `sm` | `spacing.3` | 12px |
+| `md` | `spacing.4` | 16px |
+| `lg` | `spacing.5` | 20px |
+| `xl` | `spacing.6` | 24px |
+| `2xl` | `spacing.8` | 32px |
+| `3xl` | `spacing.10` | 40px |
+| `4xl` | `spacing.20` | 80px |
 
-```vue
-<Pixel.div borderColor="border.default" borderWidth="1px" borderStyle="solid">
-  Default border color
-</Pixel.div>
-```
+## Typography Shortcuts
 
-## 2. Spacing Scale
+- Use bare `<MpText>` for default body text when no special size is required.
+- Valid common sizes include `h1`, `h2`, `h3`, `label`, `label-small`, `body`, `body-small`, and `overline`.
+- Prefer documented weight values such as `regular` and `semiBold`.
 
-Use semantic spacing tokens instead of hardcoded values:
-
-| Semantic | Token        | Value | Use Case                         |
-| -------- | ------------ | ----- | -------------------------------- |
-| `4xs`    | `0.125`      | 2px   | Tight spacing, compact layouts   |
-| `3xs`    | `spacing.1`  | 4px   | Tight spacing, compact layouts   |
-| `2xs`    | `0.375`      | 6px   | Tight spacing, compact layouts   |
-| `xs`     | `spacing.2`  | 8px   | Tight spacing, compact layouts   |
-| `sm`     | `spacing.3`  | 12px  | Default spacing between elements |
-| `md`     | `spacing.4`  | 16px  | Default spacing between elements |
-| `lg`     | `spacing.5`  | 20px  | Section spacing                  |
-| `xl`     | `spacing.6`  | 24px  | Large component spacing          |
-| `2xl`    | `spacing.8`  | 32px  | Major section separation         |
-| `3xl`    | `spacing.10` | 40px  | Page-level spacing               |
-| `4xl`    | `spacing.20` | 80px  | Page-level spacing               |
+## Safe Examples
 
 ```vue
-<MpFlex direction="column" gap="3xs" padding="2xs" margin="xl">
-  <MpText>Title</MpText>
-  <MpText>Content</MpText>
+<MpText color="text.primary">Primary content</MpText>
+<MpText color="text.secondary">Secondary content</MpText>
+
+<MpFlex direction="column" gap="sm" padding="md" backgroundColor="background.surface">
+  <MpText size="h3">Section title</MpText>
+  <MpText>Body content</MpText>
 </MpFlex>
+
+<Pixel.div borderWidth="1px" borderStyle="solid" borderColor="border.default" />
 ```
 
-## 3. Typography
+## Useful MCP Queries
 
-### Text Sizes
-
-When use regular text with 14px font size, simply use `<MpText>` without size prop:
-
-```vue
-<MpText>Regular text - 14px</MpText>
-```
-
-If need to specify size, use the following props:
-
-```vue
-<!-- Headings -->
-<MpText size="h1">Heading 1 - 24px</MpText>
-<MpText size="h2">Heading 2 - 20px</MpText>
-<MpText size="h3">Heading 3 - 16px</MpText>
-
-<!-- Regular text -->
-<MpText size="label">Regular label text - 14px</MpText>
-<MpText size="label-small">Label small text - 12px</MpText>
-<MpText size="body">Body with large line height text - 14px</MpText>
-<MpText size="body-small">Body small text - 12px</MpText>
-<MpText size="overline">Overline - 10px</MpText>
-
-<!-- Truncate -->
-<MpText line-clamp="2" is-truncated>
-  Lorem ipsum dolor sit amet, consectetur adipisicingelit. Atque consequatur dignissimos ducimus, ea eaque et excepturi iusto, laboriosam nemo
-  omnis perferendis praesentium provident quae reiciendis repellendus sunt unde voluptatem voluptates.
-</MpText>
-```
-
-### Font Weights
-
-```vue
-<MpText weight="regular">Regular - 400</MpText>
-<MpText weight="semiBold">Semibold - 500</MpText>
-```
-
-## 4. Token Resources
-
-Access token documentation via Pixel MCP tools:
-
-- Use `get-docs` with query "design tokens 2.4" or "design tokens 2.1"
-- Use `get-docs` with query "semantic color tokens" or "spacing tokens"
-
-## Token Priority Order
-
-**Always follow this hierarchy when selecting tokens:**
-
-1. **Design Token 2.4** (preferred) - Use these if the application uses Design Token 2.4
-
-```vue
-<MpText color="text.warning">use semantic token</MpText>
-```
-
-2. **Design Token 2.1** (fallback) - Use these if the application uses Design Token 2.1
-
-```vue
-<MpText color="orange.400">use foundation colors</MpText>
-```
-
-3. **Exact hex from Figma** (last resort) - Only when no semantic token or foundation token available
-
-```vue
-<MpText color="#E0AB00">use hex colors</MpText>
-```
+- `get-docs("design tokens 2.4")`
+- `get-docs("design tokens 2.1")`
+- `get-docs("semantic color tokens")`
+- `get-docs("spacing tokens")`
