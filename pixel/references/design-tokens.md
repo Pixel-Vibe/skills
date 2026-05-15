@@ -4,9 +4,18 @@ Use this file when selecting color, spacing, or typography values.
 
 ## Token Priority
 
-1. Use Design Token 2.4 semantic tokens when the project is on 2.4.
+1. Use Design Token 2.4 with semantic tokens when the project is on 2.4.
 2. Use Design Token 2.1 tokens only when the project is still on 2.1.
 3. Use exact design values only as a last resort and call that out explicitly.
+
+## Token Comparison
+
+| Feature         | Token v2.1        | Token v2.4                  |
+| --------------- | ----------------- | --------------------------- |
+| Semantic tokens | No                | Available                   |
+| Dark mode       | No                | Built-in                    |
+| Theming         | NO                | Default & Enterprise        |
+| Recommendation  | Existing projects | **New / migrated projects** |
 
 ## Core Color Choices
 
@@ -44,7 +53,7 @@ Use this file when selecting color, spacing, or typography values.
 - Valid common sizes include `h1`, `h2`, `h3`, `label`, `label-small`, `body`, `body-small`, and `overline`.
 - Prefer documented weight values such as `regular` and `semiBold`.
 
-## Safe Examples
+## Examples
 
 ```vue
 <MpText color="text.primary">Primary content</MpText>

@@ -4,7 +4,7 @@ Use this file before implementation when project readiness is uncertain.
 
 ## Package Check
 
-- Confirm `@mekari/pixel3` is installed.
+- Confirm `@mekari/pixel3` & `@mekari/pixel3-postcss` is installed.
 - Confirm the app already renders Pixel components or can be updated to do so.
 
 ## Project Variants

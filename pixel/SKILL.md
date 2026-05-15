@@ -3,7 +3,7 @@ name: pixel
 description: Build Mekari Pixel 3 UI in Vue 3/Nuxt from Figma or text. Use when implementing components, validating props, applying design tokens, or checking token mode (2.1 vs 2.4).
 metadata:
   author: Ahmad Zakiy
-  version: '2026.4.14'
+  version: '2026.5.13'
   source: https://docs.mekari.design/docs/agents/skills.html
 ---
 
@@ -62,9 +62,9 @@ Read [references/code-structure.md](references/code-structure.md) before writing
 
 ### Pixel MCP
 
-- `get-docs` - Pixel setup, component usage, design tokens, and implementation guides
-- `get-component` - Component docs, props, slots, and events
-- `get-icon` - Icon names and usage
+- `get-docs` - Pixel setup, enable theme, design tokens, and implementation guides
+- `get-component` - Component example, props, slots, and events
+- `get-icon-name` - Icon names and usage
 - `get-pattern` - Pixel UI patterns and code examples
 - `get-template` - Pixel templates and code examples
 
