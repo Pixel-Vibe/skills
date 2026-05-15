@@ -4,7 +4,7 @@ Use this file before implementation when project readiness is uncertain.
 
 ## Package Check
 
-- Confirm `@mekari/pixel3` is installed.
+- Confirm `@mekari/pixel3` & `@mekari/pixel3-postcss` is installed.
 - Confirm the app already renders Pixel components or can be updated to do so.
 
 ## Project Variants
@@ -12,7 +12,7 @@ Use this file before implementation when project readiness is uncertain.
 ### Nuxt
 
 ```bash
-pnpm add @mekari/pixel3
+npm install @mekari/pixel3 @mekari/pixel3-postcss
 ```
 
 Register Pixel according to project convention and ensure global Pixel styles are loaded.
@@ -20,7 +20,7 @@ Register Pixel according to project convention and ensure global Pixel styles ar
 ### Vue 3 + Vite
 
 ```bash
-pnpm add @mekari/pixel3
+npm install @mekari/pixel3 @mekari/pixel3-postcss
 ```
 
 Register the Pixel plugin and required composables in app bootstrap based on official docs from `get-docs`.

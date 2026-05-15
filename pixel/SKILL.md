@@ -1,13 +1,13 @@
 ---
 name: pixel
-description: Lean, execution-first guide for implementing Mekari Pixel 3 interfaces in Vue 3 or Nuxt from Figma nodes or text requirements. Use when building or modifying Pixel-based UI, validating Pixel props with MCP docs, enforcing token-safe styling, checking token mode (2.1 vs 2.4), or translating Figma structure into Pixel components with minimal context overhead.
+description: Build Mekari Pixel 3 UI in Vue 3/Nuxt from Figma or text. Use when implementing components, validating props, applying design tokens, or checking token mode (2.1 vs 2.4).
 metadata:
   author: Ahmad Zakiy
-  version: '2026.4.14'
+  version: '2026.5.13'
   source: https://docs.mekari.design/docs/agents/skills.html
 ---
 
-# Pixel New
+# Pixel Design System
 
 Build Pixel 3 UI with a low-noise workflow: verify setup, map the UI, validate props, apply token-safe styling, and ship runnable Vue/Nuxt code.
 
@@ -20,6 +20,18 @@ Build Pixel 3 UI with a low-noise workflow: verify setup, map the UI, validate p
 5. Prefer design tokens over raw color, spacing, or typography values.
 6. Use CSS Props for `MpFlex`, `MpScrollbar`, `MpSkeleton`, and `Pixel.*`; use `css()` only when CSS Props are unavailable.
 7. Preserve the project's active token mode instead of mixing 2.1 and 2.4 ad hoc.
+
+## Examples
+
+### Text request → Component output
+
+**Input:** "Create a form with email and password fields and a submit button"
+**Expected:** MpFormControl wrapping MpInput components, MpButton with variant="primary", proper imports from @mekari/pixel3, tokens used for spacing.
+
+### Figma → Code
+
+**Input:** Figma node of a data table with pagination
+**Expected:** Get node ID → call get_design_context → map to MpTable + MpPagination → validate props via get-component → output runnable SFC.
 
 ## Workflow
 
@@ -50,11 +62,11 @@ Read [references/code-structure.md](references/code-structure.md) before writing
 
 ### Pixel MCP
 
-- `get-docs` - Pixel setup, component usage, design tokens, and implementation guides
-- `get-component` - Component docs, props, slots, and events
+- `get-docs` - Pixel setup, enable theme, design tokens, and implementation guides
+- `get-component` - Component example, props, slots, and events
+- `get-icon-name` - Icon names and usage
 - `get-pattern` - Pixel UI patterns and code examples
 - `get-template` - Pixel templates and code examples
-- `hello-pixel` - Connection test for the MCP server
 
 Available prompts:
 
