@@ -38,14 +38,16 @@ Both branches use `pixel` to resolve component props and token names — never g
 From your project root, run:
 
 ```bash
-npx skills add https://github.com/pixel-vibe/skills --skill pixel
+npx skills add https://github.com/pixel-vibe/skills --skill
 ```
 
 Read more at [skills.sh](https://www.skills.sh/pixel-vibe/skills)
 
-or,
+Or, just clone or download the repo and copy the skills to your project.
 
-Just clone or download the repo and copy the skills to your project.
+```bash
+git clone https://github.com/Pixel-Vibe/skills.git
+```
 
 ## Usage
 
