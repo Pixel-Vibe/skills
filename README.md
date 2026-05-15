@@ -38,16 +38,30 @@ Both branches use `pixel` to resolve component props and token names — never g
 From your project root, run:
 
 ```bash
-npx skills add https://github.com/pixel-vibe/skills --skill
+npx skills add https://github.com/pixel-vibe/skills
 ```
+
+Or install specific skill, run:
+
+```bash
+npx skills add https://github.com/pixel-vibe/skills --skills --pixel
+```
+
+### Options
+
+| Option                    | Description                                                                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-g, --global`            | Install to user directory instead of project                                                                                                       |
+| `-a, --agent <agents...>` | <!-- agent-names:start -->Target specific agents (e.g., `claude-code`, `codex`). See [Supported Agents](#supported-agents)<!-- agent-names:end --> |
+| `-s, --skill <skills...>` | Install specific skills by name (use `'*'` for all skills)                                                                                         |
+| `-l, --list`              | List available skills without installing                                                                                                           |
+| `--copy`                  | Copy files instead of symlinking to agent directories                                                                                              |
+| `-y, --yes`               | Skip all confirmation prompts                                                                                                                      |
+| `--all`                   | Install all skills to all agents without prompts                                                                                                   |
 
 Read more at [skills.sh](https://www.skills.sh/pixel-vibe/skills)
 
 Or, just clone or download the repo and copy the skills to your project.
-
-```bash
-git clone https://github.com/Pixel-Vibe/skills.git
-```
 
 ## Usage
 
