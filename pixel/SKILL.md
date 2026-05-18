@@ -17,9 +17,10 @@ Build Pixel 3 UI with a low-noise workflow: verify setup, map the UI, validate p
 2. Use Pixel primitives before raw HTML equivalents.
 3. Wrap validated fields in `MpFormControl`.
 4. Verify props with Pixel MCP `get-component` before guessing.
-5. Prefer design tokens over raw color, spacing, or typography values.
-6. Use CSS Props for `MpFlex`, `MpScrollbar`, `MpSkeleton`, and `Pixel.*`; use `css()` only when CSS Props are unavailable.
-7. Preserve the project's active token mode instead of mixing 2.1 and 2.4 ad hoc.
+5. Verify icon name with Pixel MCP `get-icon-name` before guessing.
+6. Prefer design tokens over raw color, spacing, or typography values.
+7. Use CSS Props for `MpFlex`, `MpScrollbar`, `MpSkeleton`, and `Pixel.*`, use `css()` only when CSS Props are unavailable.
+8. Preserve the project's active token mode instead of mixing 2.1 and 2.4 ad hoc.
 
 ## Examples
 
