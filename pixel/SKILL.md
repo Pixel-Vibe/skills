@@ -2,9 +2,9 @@
 name: pixel
 description: Build Mekari Pixel 3 UI in Vue 3/Nuxt from Figma or text. Use when implementing components, validating props, applying design tokens, or checking token mode (2.1 vs 2.4).
 metadata:
-  author: Ahmad Zakiy
-  version: '2026.5.13'
-  source: https://docs.mekari.design/docs/agents/skills.html
+  author: ahmad.zakiy@mekari.com
+  version: '2026.5.18'
+  source: https://ai.mekari.design/skills/pixel
 ---
 
 # Pixel Design System
@@ -16,10 +16,10 @@ Build Pixel 3 UI with a low-noise workflow: verify setup, map the UI, validate p
 1. Import UI from `@mekari/pixel3`.
 2. Use Pixel primitives before raw HTML equivalents.
 3. Wrap validated fields in `MpFormControl`.
-4. Verify props with Pixel MCP `get-component` before guessing.
+4. Verify component's props with Pixel MCP `get-component` before guessing.
 5. Verify icon name with Pixel MCP `get-icon-name` before guessing.
-6. Prefer design tokens over raw color, spacing, or typography values.
-7. Use CSS Props for `MpFlex`, `MpScrollbar`, `MpSkeleton`, and `Pixel.*`, use `css()` only when CSS Props are unavailable.
+6. Use CSS Props for `MpFlex`, `MpScrollbar`, `MpSkeleton`, and `Pixel.*`, use `css()` only when CSS Props are unavailable.
+7. Prefer design tokens over raw color, spacing, or typography values.
 8. Preserve the project's active token mode instead of mixing 2.1 and 2.4 ad hoc.
 
 ## Examples
