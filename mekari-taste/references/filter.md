@@ -1,17 +1,20 @@
 # Filter
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 Narrowing a list with one or multiple criteria. Sits in the toolbar above an index/list view.
 
 > **Note: this reference is a starting draft.** If you have a specific filter pattern from existing Mekari products (Expense transaction filter, Talenta employee filter, Qontak deal filter), enrich this file with the concrete filter inventory, chip behavior, and saved-views pattern. Treat the rules below as the minimum bar.
 
 ## When to use which variant
 
-| List size / complexity                           | Variant                      |
-| ------------------------------------------------ | ---------------------------- |
-| Up to 3 filter dimensions, each with few options | Inline dropdowns in toolbar  |
-| 4+ filter dimensions OR complex multi-criteria   | Filter button → drawer/panel |
-| Free-text search across all fields               | Standalone search input      |
-| Date range is the primary filter                 | Inline date range picker     |
+| List size / complexity | Variant |
+|---|---|
+| Up to 3 filter dimensions, each with few options | Inline dropdowns in toolbar |
+| 4+ filter dimensions OR complex multi-criteria | Filter button → drawer/panel |
+| Free-text search across all fields | Standalone search input |
+| Date range is the primary filter | Inline date range picker |
 
 ## Variant A: Inline dropdowns
 
@@ -27,11 +30,35 @@ Each filter is its own dropdown in the toolbar, left-aligned.
 - Open panel: same as form select panel. Multi-select shows checkboxes, single-select shows radio dots or check on selected.
 
 ### Search input
-
 - Always on the right of the filter dropdowns, separated by `pxl-space-md` 16 gap.
 - 32px height, `pxl-radii-md` 6, leading magnifier icon `Color/Icon/default`.
 - Placeholder: specific, like "Search by name or ID" — not "Search".
 - Debounce: 300ms before triggering search.
+
+**Pixel 3 implementation** — use `MpInputGroup` + `MpInputLeftAddon`, NOT `MpInput left-icon` (that prop does not exist in Pixel 3):
+
+```vue
+<MpInputGroup id="search-group" size="md" :class="css({ width: '240px' })">
+  <MpInputLeftAddon id="search-left-addon">
+    <MpIcon name="search" size="sm" />
+  </MpInputLeftAddon>
+  <MpInput id="search" v-model="searchQuery" placeholder="Search by name" is-full-width />
+</MpInputGroup>
+```
+
+Imports: `MpInputGroup, MpInputLeftAddon, MpInput, MpIcon`
+
+### Filter dropdown
+**Pixel 3 — always pass `size="md"` explicitly.** The default size in Pixel 3 `MpSelect` is `sm`, not `md`. Without the explicit prop, the dropdown renders smaller than the toolbar height:
+
+```vue
+<MpSelect id="status-filter" v-model="filterValue" size="md" is-full-width>
+  <option value="">All</option>
+  <option v-for="opt in options" :key="opt" :value="opt">{{ opt }}</option>
+</MpSelect>
+```
+
+Width: fixed `240px` wrapper (`MpFlex` or `css({ width: '240px' })`), not full-page-width.
 
 ## Variant B: Filter button → drawer/panel
 
@@ -45,7 +72,6 @@ When there are many dimensions or some require complex inputs (number ranges, mu
 - Click opens a right-side drawer (~400px wide) sliding in from right.
 
 ### Drawer anatomy
-
 - Header: `Heading/H3` "Filters", `×` close button.
 - Body: vertical list of filter dimensions, each a sub-section with a label and the input control (checkbox list, date range, etc.).
 - Footer: sticky bottom, "Clear all" text link left, "Apply filters" primary button right.
@@ -119,7 +145,6 @@ Sometimes options in dimension B depend on the selection in dimension A (e.g. "C
 ## Output contract for this pattern
 
 When you ship a filter:
-
 - Variant chosen with reasoning.
 - Filter dimension inventory: name, type (single/multi/range/text), options or source.
 - Default filter state on first load.

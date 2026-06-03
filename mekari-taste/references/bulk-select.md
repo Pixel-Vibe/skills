@@ -1,11 +1,13 @@
 # Bulk select
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 Selecting multiple table rows to perform an action on all of them at once. Common in transaction lists, employee lists, approval queues.
 
 > **Note: this reference is a starting draft.** If you have specific bulk-action patterns from existing Mekari products (Expense bulk approve, Talenta bulk export, Qontak bulk reassign), enrich this file with the concrete copy, action inventory, and confirmation behavior. Treat the rules below as the minimum bar.
 
 ## When to use this pattern
-
 - The list has actions that meaningfully scale (approve, reject, export, archive, delete, reassign).
 - It's reasonable for a user to want to act on 10+ rows at once.
 - The action is the same regardless of which rows are selected (e.g. "Approve" works the same on row 1 and row 50).
@@ -44,7 +46,6 @@ When ≥ 1 row is selected, the table header transforms into a bulk action bar *
 ```
 
 ### Action bar anatomy
-
 - Background: `Color/Background/brand-selected` (`#D6DBF7`) lightened, or `#EEF2FF` if that token isn't available. Subtle, not strong.
 - Height: same as standard header (~44px).
 - Left: select-all checkbox (now showing indeterminate or checked state) + count text `Label/Semibold` 14 "N selected".
@@ -52,7 +53,6 @@ When ≥ 1 row is selected, the table header transforms into a bulk action bar *
 - Right: close `×` button to clear selection.
 
 ### Selected row state
-
 - Row background: `Color/Background/brand-selected` lightened (~`#EEF2FF`).
 - Other row styling unchanged.
 
@@ -108,7 +108,6 @@ This separation between "all on this page" and "all in the dataset" is important
 ## Output contract for this pattern
 
 When you ship bulk select:
-
 - Action inventory with labels and which require confirmation.
 - Max selection limit and copy when reached.
 - Behavior on page change / filter change with selection active.

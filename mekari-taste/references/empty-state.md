@@ -1,9 +1,11 @@
 # Empty state
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 A view shown when there's no data yet. Anchored example: "Reimbursement benefit will appear here" in the Talenta reimbursement form.
 
 ## When to use this pattern
-
 Three contexts:
 
 1. **First-time empty** (no records ever created) — the most important to design well; it teaches the user what to do.
@@ -24,20 +26,17 @@ This file covers all three; the anatomy differs.
 ```
 
 ### Layout
-
 - Center the whole block in the available content area, both axes.
 - Width: max ~400px so the helper text wraps naturally.
 - Vertical: at least `pxl-space-4xl` 80 padding top and bottom inside the container.
 
 ### Illustration
-
 - **Mekari uses colored 3D-style illustrations** for empty states — this is the one place playful imagery is welcome. Examples: a folder with a question mark, a clipboard with a magnifying glass, an empty inbox tray.
 - Source: design system assets. **Do not generate new illustrations** — use the ones in the Pixel/Mekari asset library to keep visual consistency across products.
 - Size: 120–160px on the longest edge. Don't exceed 200px or it dominates.
 - Gap below illustration: `pxl-space-md` 16.
 
 ### Title
-
 - Style: `Label/Semibold` 16 or `Heading/H3`.
 - Color: `Color/Text/default`.
 - Voice: **descriptive of what will appear**, not motivational.
@@ -49,7 +48,6 @@ This file covers all three; the anatomy differs.
   - ❌ "It's quiet in here..."
 
 ### Helper text
-
 - Style: `Label small/Regular` 14, `Color/Text/secondary`.
 - Voice: **points at the action** with the literal button name bolded.
   - ✅ "Add benefit from **Add benefit** button."
@@ -59,7 +57,6 @@ This file covers all three; the anatomy differs.
   - ❌ "Tap the button to add your first benefit."
 
 ### CTA
-
 - Primary brand-bold button when the user can act directly from here.
 - Place it `pxl-space-md` 16 below helper text.
 - Use the same label as the button used elsewhere on the page (consistency over creativity).
@@ -132,7 +129,6 @@ While loading initial data, show skeleton placeholders, not the empty state. Onl
 ## Output contract for this pattern
 
 When you ship an empty state:
-
 - Identify which variant (first-time / filtered / section-empty).
 - Title and helper copy with bolded button name.
 - Illustration choice (asset name from design system, not a description).

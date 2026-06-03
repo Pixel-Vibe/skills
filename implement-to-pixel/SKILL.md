@@ -1,10 +1,6 @@
 ---
 name: implement-to-pixel
-description: 'Entry point and orchestrator for translating Mekari PRDs or Figma key-page designs into Vue/Nuxt code on Pixel 3 (token 2.4 default). Triggered when the user attaches a Confluence PRD URL, a Figma URL, or invokes /implement-to-pixel, for any Mekari product (Expense, Talenta, Qontak, Jurnal, Flex, KlikPajak, Sign). The skill detects input type and routes accordingly: for PRD input it loads mekari-taste to run an imagination phase (read, visualize, draw wireframes, draft plan, wait for user confirmation) before generating code; for Figma input it loads figma-implement-design to fetch the design and generates code directly without an imagination phase, since the Figma file already provides the visual. Output is always Vue/Nuxt code structured for direct team iteration. Do not use for marketing pages, landing pages, or external-facing editorial content.'
-metadata:
-  author: fajar@mekari.com
-  version: '2026.5.18'
-  source: https://ai.mekari.design/skills/implement-to-pixel
+description: "Entry point and orchestrator for translating Mekari PRDs or Figma key-page designs into Vue/Nuxt code on Pixel 3 (token 2.4 default). Triggered when the user attaches a Confluence PRD URL, a Figma URL, or invokes /implement-to-pixel, for any Mekari product (Expense, Talenta, Qontak, Jurnal, Flex, KlikPajak, Sign). The skill detects input type and routes accordingly: for PRD input it loads mekari-taste to run an imagination phase (read, visualize, draw wireframes, draft plan, wait for user confirmation) before generating code; for Figma input it loads figma-implement-design to fetch the design and generates code directly without an imagination phase, since the Figma file already provides the visual. Output is always Vue/Nuxt code structured for direct team iteration. Do not use for marketing pages, landing pages, or external-facing editorial content."
 ---
 
 # Implement to Pixel — Orchestrator
@@ -30,13 +26,13 @@ Default to Pixel 2.4 in all cases. Switch only if the user or the source explici
 
 Look at what was attached:
 
-| Input                                        | Route                                                                           |
-| -------------------------------------------- | ------------------------------------------------------------------------------- |
-| Confluence URL                               | **Branch A: PRD path** (with imagination phase)                                 |
-| Figma URL                                    | **Branch B: Figma path** (no imagination phase)                                 |
-| Both Confluence and Figma URLs               | Branch B (Figma is more specific), but read the PRD to fill copy/edge case gaps |
-| Pasted PRD text or chat description (no URL) | Branch A                                                                        |
-| `/implement-to-pixel` with no attachment     | Ask which input the user has                                                    |
+| Input | Route |
+|---|---|
+| Confluence URL | **Branch A: PRD path** (with imagination phase) |
+| Figma URL | **Branch B: Figma path** (no imagination phase) |
+| Both Confluence and Figma URLs | Branch B (Figma is more specific), but read the PRD to fill copy/edge case gaps |
+| Pasted PRD text or chat description (no URL) | Branch A |
+| `/implement-to-pixel` with no attachment | Ask which input the user has |
 
 ## Branch A: PRD path (imagination needed)
 
@@ -70,12 +66,18 @@ Do not generate code until the user confirms.
 
 For each screen in the confirmed plan:
 
-**Resolve components via Pixel MCP tools.** Never guess prop names — Pixel 3 evolves.
+**Step 0 — Pixel MCP lookup. This is a hard gate before any code.**
 
-- `Pixel:get-component` — props, slots, required attributes
-- `Pixel:get-pattern` — composed patterns (search-and-filter, data-table-with-pagination)
-- `Pixel:get-template` — full-page templates if available
-- `Pixel:get-icon-name` — pass intent ("close", "calendar"), get exact `MpIcon` name
+For every UI element you are about to write, call the Pixel MCP tool first:
+
+| Tool | When to call |
+|---|---|
+| `get-component` | Any component — modal, toast, input, button, table, tag, etc. |
+| `get-pattern` | Page-level patterns — form view, index view, empty state, etc. |
+| `get-icon-name` | Before using any icon name |
+| `get-template` | Full-page template scaffolding |
+
+Read the props table and usage example. Then write code using the exact component name, props, and slot structure from MCP. If `get-component` returns nothing, state it explicitly — do not invent.
 
 **Reference token names** from `mekari-taste/references/foundations.md`. Token names by reference, never raw hex.
 
@@ -143,66 +145,17 @@ Designer key pages typically show only the happy path. Walk through each pattern
 
 For each pattern in use, walk through its anatomy in `mekari-taste/references/[pattern].md` and translate into Vue. Use Pixel MCP tools as in A3 — never guess prop names.
 
-### B6. Apply Mekari taste pass
-
-Even though `mekari-taste` skill isn't loaded, the taste decisions still apply. As you build (or as a final sweep), make sure every component decision matches Mekari conventions, even if Figma showed otherwise. Common overrides:
-
-- **Status display**: expand plain `Approved` to `Approved by [name], [date time] (timezone)` with status dot
-- **Empty state**: ensure illustrated + descriptive title + action-pointing helper with bold button name (build one if Figma didn't have it)
-- **File input helper**: specific formats and size limit, never generic
-- **Table**: 1px bottom row border only, no zebra, no outer border, numerics right-aligned (override Figma if needed)
-- **Cancel button**: text link or low-emphasis, never matching weight to primary submit
-- **Required indicators**: red asterisk on label
-- **One primary button per page**: if you find more than one primary (solid brand) button on a screen, demote all but the most important one to outline or text link
-- **Stepper completed state**: use the Pixel stepper component as-is. Never create a custom variant for completed, active, or disabled steps — the component already defines these states. If the Figma shows a custom stepper variant, flag it as a deviation and implement using the standard Pixel component
-- **Button icons — function only, not decorative**: only add a left-icon to a button when the icon communicates a function that the label alone does not (e.g. `+` for "Add item", download icon for "Export"). For actions like Submit, Save, Save changes, Confirm, or Reject — no icon. If Figma shows a decorative icon on these buttons, remove it in code
-- **Copy voice**: rewrite cheerful/generic copy to plain Mekari voice. **For copy explicitly chosen by the designer in Figma, flag rewrites in the output rather than silently change** — designer may have intended that copy.
-
-### B7. Validate against the screenshot
+### B6. Validate against the screenshot
 
 Compare the rendered output mentally against the Figma screenshot for layout/typography/color match. Note deliberate deviations (e.g. "Figma used a custom shadow; replaced with flat-card Mekari convention").
 
-### B8. Hand off
+### B7. Hand off
 
 Proceed to the shared "Output structure" section below.
 
 ## Output structure (both branches)
 
 The deliverable replaces handoff. The team will iterate on this code directly, so structure it for that.
-
-### Header comment
-
-At the top of each Vue file:
-
-```vue
-<!--
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Mekari [Product] — [Screen name]
-  Source: [Confluence link | Figma fileKey/nodeId | Chat description]
-  Token mode: Pixel 2.4
-  Patterns used: layout-shell, [pattern1], [pattern2], ...
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  STATES INCLUDED:
-    - Happy path
-    - Empty state: illustrated, title "[…]", helper "[…]"
-    - Loading: skeleton rows for table
-    - Error: form-level banner with retry
-    - Null values: em dash (—) in Color/Text/secondary
-
-  COPY DEFAULTS (input did not specify — iterate freely):
-    - Submit verb: "Submit request"
-    - Empty state title: "[…]"
-    - Empty state helper: "[…]"
-
-  CONVENTION OVERRIDES applied (Figma path only):
-    - Status pill: expanded from "Approved" to actor + timestamp
-    - Cancel button: changed from solid to text-link weight
-
-  OPEN ITEMS for product/design follow-up:
-    - [list anything still flagged]
--->
-```
 
 ### Section dividers
 
@@ -214,6 +167,18 @@ Inside the template:
 <!-- ═════ Filter toolbar ═════ -->
 <!-- ═════ Data table ═════ -->
 <!-- ═════ Empty state ═════ -->
+```
+
+### Toast notifications
+
+- Always use `toast.notify()` from `@mekari/pixel3`. Never build a custom overlay or Teleport div.
+- Import: `import { toast } from '@mekari/pixel3'`
+- Position: **`top-center`** — horizontally centered on the full screen.
+- Duration: **`3000`** ms for `success` and `error`. Do not omit — Pixel's default is not guaranteed.
+- Variants: `success` (green), `error` (red), `greeting` (blue).
+
+```ts
+toast.notify({ id: 'page-toast', position: 'top-center', variant: 'success', title: 'Team created successfully.', duration: 3000 })
 ```
 
 ### Constants at the top of `<script setup>`

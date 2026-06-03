@@ -1,10 +1,6 @@
 ---
 name: mekari-taste
-description: 'Imagination phase for Mekari PRD to code workflow. Loaded by implement-to-pixel on the PRD path (when input is a Confluence link, pasted PRD text, or chat-described requirements — not Figma). This skill reads the PRD end-to-end, applies five Mekari visual principles (Layered, Quiet, Accountable, Density, Frames hold) to imagine each screen, identifies which Mekari patterns apply, renders one low-fidelity wireframe per screen via the visualizer, and drafts a structured implementation plan. After the user confirms the plan, control returns to implement-to-pixel to generate Vue/Nuxt code. Do not use this skill standalone for code generation — it produces wireframes and plans, not code. Do not use for Figma input — implement-to-pixel handles Figma directly without this imagination phase. Do not use for marketing pages, landing pages, or external-facing editorial content.'
-metadata:
-  author: fajar@mekari.com
-  version: '2026.5.18'
-  source: https://ai.mekari.design/skills/mekari-taste
+description: "Imagination phase for Mekari PRD to code workflow. Loaded by implement-to-pixel on the PRD path (when input is a Confluence link, pasted PRD text, or chat-described requirements — not Figma). This skill reads the PRD end-to-end, applies five Mekari visual principles (Layered, Quiet, Accountable, Density, Frames hold) to imagine each screen, identifies which Mekari patterns apply, renders one low-fidelity wireframe per screen via the visualizer, and drafts a structured implementation plan. After the user confirms the plan, control returns to implement-to-pixel to generate Vue/Nuxt code. Do not use this skill standalone for code generation — it produces wireframes and plans, not code. Do not use for Figma input — implement-to-pixel handles Figma directly without this imagination phase. Do not use for marketing pages, landing pages, or external-facing editorial content."
 ---
 
 # Mekari Taste — Imagination Phase
@@ -30,10 +26,6 @@ When you draw the wireframe, show this layering. Don't make everything one color
 ### 2. Quiet by default, loud only when needed
 
 Color is signal, not decoration. Brand color belongs to the primary action. Status colors belong to status indicators. Backgrounds stay neutral. Most of the screen is calm, so the few things that matter pop.
-
-**One primary button per page.** A primary button is the loudest interactive element on a screen. If there are two, neither is loud anymore — both become noise. Every page has exactly one primary action. Everything else is secondary (outline) or tertiary (text link).
-
-**Button icons communicate function, not decoration.** An icon on a button earns its place only when it adds meaning the label alone does not carry — `+` before "Add item" tells the user they're creating something new; a download icon before "Export" signals a file is coming. For actions like Submit, Save, Save changes, Confirm, or Reject, the label is already unambiguous. Adding an icon to these is visual noise — it makes the button louder without making it clearer.
 
 When you draw the wireframe, reserve color for the one or two things on the screen that genuinely deserve attention.
 
@@ -86,6 +78,19 @@ Match what the screen does to available pattern references in `references/`:
 - Destructive confirmation → `confirmation.md`
 
 Every screen also uses `layout-shell.md`. Read only the references for patterns actually present. Use `references/foundations.md` for token names.
+
+### Step 3.5: Validate against Pixel MCP before planning
+
+After identifying which patterns and components apply, validate each against the Pixel MCP **before** drafting the plan or generating any code. This ensures reference files don't silently go stale.
+
+| What to validate | MCP call |
+|---|---|
+| Page-level pattern (index, form, detail, pagination, user-account…) | `get-pattern("<slug>")` |
+| Any UI component (button, input, table, modal, popover, badge…) | `get-component("<name>")` |
+| Any icon name | `get-icon-name("<name>")` |
+| Full page template | `get-template("<name>")` |
+
+If MCP output conflicts with a reference file → **trust MCP**. Note the discrepancy in the plan and flag it to the user so the reference file can be updated.
 
 ### Step 4: Imagine the screen using the five principles
 
@@ -150,7 +155,6 @@ If the plan and wireframes look right, say "looks good" or "go ahead" and `imple
 After rendering wireframes and the plan, **stop and wait**. Do not generate code. Do not call `implement-to-pixel`.
 
 The user will either:
-
 - **Confirm** ("looks good", "go ahead", "yes proceed") → control returns to `implement-to-pixel` to take the plan and generate code
 - **Request changes** ("change the empty state", "use a different pattern for screen 2", "add X") → revise the plan, redraw affected wireframes, present again
 - **Ask questions** → answer using these principles and references; stay paused until user confirms

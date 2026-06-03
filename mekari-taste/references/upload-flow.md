@@ -1,17 +1,20 @@
 # Upload flow
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 Patterns for uploading files — single attachment, multi-file with progress, drag-drop zones, and post-upload preview.
 
 > **Note: this reference is a starting draft.** Anchored loosely on the simple file picker in Talenta reimbursement. If you have a more complete upload pattern from Mekari (multi-file progress, S3 direct upload, drag-drop with preview, replace-on-reupload), enrich this file accordingly. Treat the rules below as the minimum bar.
 
 ## When to use which variant
 
-| Context                                                  | Variant                         |
-| -------------------------------------------------------- | ------------------------------- |
-| Single optional file (receipt, ID photo, supporting doc) | Simple file picker              |
-| Single required file with preview before submit          | File picker + inline preview    |
-| Multiple files, mixed types, batch upload                | Drop zone + file list           |
-| Large files or async processing (videos, PDFs > 20MB)    | Drop zone + queue with progress |
+| Context | Variant |
+|---|---|
+| Single optional file (receipt, ID photo, supporting doc) | Simple file picker |
+| Single required file with preview before submit | File picker + inline preview |
+| Multiple files, mixed types, batch upload | Drop zone + file list |
+| Large files or async processing (videos, PDFs > 20MB) | Drop zone + queue with progress |
 
 ## Variant A: Simple file picker
 
@@ -27,7 +30,6 @@ maximum of 10 MB.
 ```
 
 ### Anatomy
-
 - Container: 40px height, border `Color/Border/default` 1px, radius `pxl-radii-md` 6.
 - Inside, left to right:
   - **"Choose file" button**: outline style, height ~28–32px, padding `pxl-space-xs` 8 horizontal, `Label small/Regular` Semibold, text `Color/Text/link`, border `Color/Border/default`. Margin `pxl-space-2xs` 6 from container edge.
@@ -35,7 +37,6 @@ maximum of 10 MB.
 - Helper text below: **always** specify allowed formats and max size. Format: "File must be in [formats] with a maximum of [size]."
 
 ### States
-
 - **Empty (initial)**: "No file chosen yet".
 - **Selected (not yet uploaded)**: filename. Add a small `×` icon at the far right to clear selection.
 - **Uploading**: linear progress bar inside the container, status text "Uploading… 45%".
@@ -43,7 +44,6 @@ maximum of 10 MB.
 - **Error**: filename in `Color/Background/danger-bold`, status icon (alert-circle) right-aligned, helper text replaced with error: "Upload failed. File exceeds 10 MB."
 
 ### Required field
-
 - Asterisk in label as usual.
 - Validate on submit, not on selection.
 
@@ -83,7 +83,6 @@ Uploaded files:
 ```
 
 ### Drop zone anatomy
-
 - Dashed border: 1px dashed `Color/Border/default`, radius `pxl-radii-md` 6.
 - Background: `Color/Background/surface` (very subtle).
 - Padding: `pxl-space-3xl` 40 vertical, `pxl-space-xl` 24 horizontal.
@@ -91,7 +90,6 @@ Uploaded files:
 - Drag-over state: border solid `Color/Border/selected`, background `Color/Background/brand-selected` lightened.
 
 ### File list anatomy
-
 - Each row: `Color/Background/stage` (white), border `Color/Border/default` 1px (or just bottom border if part of a card).
 - Row content: file-type icon + filename + size or status + remove button.
 - Progress: replace size text with `Label small/Regular Color/Text/secondary` "uploading XX%" + a thin progress bar at the bottom of the row.
@@ -127,7 +125,6 @@ Good: "File must be in JPG, JPEG, PNG, and PDF with a maximum of 10 MB."
 ## Output contract for this pattern
 
 When you ship an upload field/zone:
-
 - Variant chosen with reasoning.
 - Allowed formats, max size per file, max file count.
 - Validation strategy (client vs server messages).
