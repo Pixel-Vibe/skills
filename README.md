@@ -44,7 +44,7 @@ npx skills add https://github.com/pixel-vibe/skills
 Or install specific skill, run:
 
 ```bash
-npx skills add https://github.com/pixel-vibe/skills --skills --pixel
+npx skills add https://github.com/pixel-vibe/skills --skill pixel
 ```
 
 ### Options
