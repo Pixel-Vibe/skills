@@ -9,8 +9,6 @@ metadata:
 
 # Pixel Design System
 
-# Pixel Design System
-
 Build Pixel 3 UI with a low-noise workflow: verify setup, map the UI, validate props, apply token-safe styling, and ship runnable Vue/Nuxt code.
 
 ## Golden Rules
