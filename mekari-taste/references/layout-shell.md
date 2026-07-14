@@ -1,21 +1,24 @@
 # Layout shell
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 Every Mekari product screen sits inside this shell. Read this once when starting a new screen, then move to the pattern reference for the page content.
 
 ## Color zones (the most-confused part)
 
-Before anything else: Mekari uses **surface** (slate `#F1F5F9`) and **stage** (white) in a specific alternating pattern. The principle is _surface frames, stage holds content_ — but the zones aren't intuitive, so here's the explicit map:
+Before anything else: Mekari uses **surface** (slate `#F1F5F9`) and **stage** (white) in a specific alternating pattern. The principle is *surface frames, stage holds content* — but the zones aren't intuitive, so here's the explicit map:
 
-| Zone                                                                                     | Background                                                                   |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Top bar                                                                                  | `Color/Background/stage` (white)                                             |
-| Nav rail (any variant: single, dual primary, dual secondary)                             | `Color/Background/surface`                                                   |
-| Page header area (the band that holds breadcrumb, H1, status pill, primary CTA, tab bar) | `Color/Background/surface`                                                   |
-| Content area (below the page header, holds cards / tables / forms)                       | `Color/Background/stage` (white)                                             |
-| Card inside the content area (when a pattern uses one)                                   | `Color/Background/stage` (white) — same as content area, separated by border |
-| Table header row                                                                         | `Color/Background/surface`                                                   |
-| Table body rows                                                                          | `Color/Background/stage` (white)                                             |
-| Floating layers (dropdowns, modals, popovers)                                            | `Color/Background/stage` (white) with elevation                              |
+| Zone | Background |
+|---|---|
+| Top bar | `Color/Background/stage` (white) |
+| Nav rail (any variant: single, dual primary, dual secondary) | `Color/Background/surface` |
+| Page header area (the band that holds breadcrumb, H1, status pill, primary CTA, tab bar) | `Color/Background/surface` |
+| Content area (below the page header, holds cards / tables / forms) | `Color/Background/stage` (white) |
+| Card inside the content area (when a pattern uses one) | `Color/Background/stage` (white) — same as content area, separated by border |
+| Table header row | `Color/Background/surface` |
+| Table body rows | `Color/Background/stage` (white) |
+| Floating layers (dropdowns, modals, popovers) | `Color/Background/stage` (white) with elevation |
 
 **Most common mistake**: putting white on the nav rail or page header, putting surface on the content area. If a generated screen feels "off" in a way you can't name, check the backgrounds against this table first.
 
@@ -47,12 +50,10 @@ Before anything else: Mekari uses **surface** (slate `#F1F5F9`) and **stage** (w
 - Horizontal padding: `pxl-space-md` (16) left, `pxl-space-md` right.
 
 ### Left cluster
-
 1. Product logo (`mekari [productname]` lockup). The product name uses the product-specific accent (red for Talenta, blue-green for Expense, blue for Qontak) — do not invent a new color, use the brand asset.
 2. Optional workspace switcher to the right of the logo (e.g. Talenta's `HRIS ▾`) — only in products with multiple workspaces.
 
 ### Right cluster (in order, left to right)
-
 1. **Ask Airene pill** — `BETA` tag inline. Only in products that have shipped the AI assistant. If you're unsure whether the product has it, ask; do not assume.
 2. `+` create shortcut icon button.
 3. Search icon button.
@@ -63,7 +64,6 @@ Before anything else: Mekari uses **surface** (slate `#F1F5F9`) and **stage** (w
 ## Nav rail — pick one pattern
 
 ### Single rail with labels (Qontak, Talenta)
-
 - Width ~210px.
 - Background: `Color/Background/surface`.
 - Right border: `Color/Border/default` 1px.
@@ -75,7 +75,6 @@ Before anything else: Mekari uses **surface** (slate `#F1F5F9`) and **stage** (w
 - Bottom: collapse toggle (`«` icon) flush left, and below it a `Company ID: 102938` micro-meta line in `Label small/Regular Color/Text/secondary`.
 
 ### Dual rail (Expense)
-
 - Use when the product has 4+ modules each containing 4+ sub-pages.
 - Primary rail: ~64px wide, icon-only, background `Color/Background/surface`. Active module has bg `Color/Background/brand-selected` + icon `Color/Icon/brand`. Bottom: collapse toggle.
 - Secondary sidebar: ~210px wide, background `Color/Background/surface`, right border `Color/Border/default`.
@@ -105,7 +104,10 @@ The main work area, below the page header.
 
 Vertical order inside the page header area, with `pxl-space-xs` 8 gap between rows:
 
-1. **Breadcrumb** (optional) — `Label small/Regular Color/Text/secondary`. Separator: `/` with spaces. Last segment is the current page, not clickable, same color as others (no bold). Hide breadcrumb if depth is 1.
+1. **Breadcrumb** (optional) — `Label small/Regular Color/Text/secondary`. Separator: ` / ` with spaces. Hide breadcrumb if depth is 1.
+   - **The current page does NOT appear in the breadcrumb.** The H1 below it is the current page. Breadcrumb shows only ancestor pages as clickable links.
+   - ✅ Breadcrumb: `Teams` → H1: `Create team`
+   - ❌ Breadcrumb: `Teams › Create team` → H1: `Create team` (duplicates the current page)
 2. **Title row** — flex row, space-between:
    - Left: `Heading/H1` + optional status pill inline (gap `pxl-space-sm` 12). Status pill anatomy in `detail-view.md`.
    - Right: primary CTA button. See "Primary CTA" below.
@@ -114,7 +116,6 @@ Vertical order inside the page header area, with `pxl-space-xs` 8 gap between ro
 Gap between the bottom of the page header area (surface) and the top of the content area (white): `pxl-space-md` 16. No divider line — the color transition is the separator.
 
 ### Primary CTA in header
-
 - Button variant: solid brand. Background `Color/Background/brand-bold`, text `Color/Text/inverse` (white), `Label/Semibold` 14.
 - Padding: `pxl-space-sm` 12 vertical, `pxl-space-md` 16 horizontal.
 - Radius: `pxl-radii-md` 6.
@@ -122,18 +123,74 @@ Gap between the bottom of the page header area (surface) and the top of the cont
 - Only **one** primary CTA per page header. Secondary actions go in a menu or beside it as outline buttons.
 
 ### Tab bar (Pixel 2.4 style)
-
 - Underline tabs, not pill tabs.
 - Tab item: `Label/Semibold` 14, padding `pxl-space-sm` 12 vertical, `pxl-space-md` 16 horizontal.
-- Active: text `Color/Text/selected` (`#4B61DC`), bottom border 2px `Color/Border/selected` (`#4B61DC`).
+- Active: text `Color/Text/selected` (`#4B61DC`), bottom border **3px** `Color/Border/selected` (`#4B61DC`).
 - Inactive: text `Color/Text/secondary`, no border.
-- Container has a bottom border `Color/Border/default` 1px running the full content width — the active tab's 2px border sits on top of it.
+- Inactive hover: text → `Color/Text/link`. No border on hover.
+- Active hover: border indicator stays `Color/Border/selected` (does not change on hover).
+- Container has a bottom border `Color/Border/default` 1px running the full content width — the active tab's 3px border sits on top of it.
+- Tab list horizontal padding: `pxl-space-xl` 24 inline (`padding-inline: var(--mp-spacing-6)`), `0` block.
 - Gap between tabs: `pxl-space-md` 16. Tabs are left-aligned, not stretched.
+
+### Pixel 3 tab implementation pattern
+
+Tabs in Pixel 3 require a **flex-column chain with `min-height: 0`** at every level, otherwise the content area does not scroll or fill correctly.
+
+```vue
+<template>
+  <MpTabs id="page-tabs" v-model="activeTab" :is-show-border="false" :class="tabsClass">
+    <MpTabList :class="tabListClass">
+      <MpTab>Tab A</MpTab>
+      <MpTab>Tab B</MpTab>
+    </MpTabList>
+
+    <!-- contentAreaClass from usePixelLayout — override padding to 0 for tabs -->
+    <div :class="[contentAreaClass, pageSurfaceClass]">
+      <MpTabPanels :class="tabPanelsClass">
+        <MpTabPanel :class="tabPanelClass">
+          <!-- page content with its own padding -->
+          <MpFlex direction="column" gap="6" p="6" :class="contentStackClass">
+            ...
+          </MpFlex>
+        </MpTabPanel>
+      </MpTabPanels>
+    </div>
+  </MpTabs>
+</template>
+
+<script setup>
+const tabsClass     = css({ display: 'flex', flexDirection: 'column', flexGrow: 1, minH: 0 })
+const tabListClass  = css({ '& div': { marginBottom: 0 } })
+const pageSurfaceClass = css({ p: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', minH: 0 })
+const tabPanelsClass   = css({ flex: 1, display: 'flex', flexDirection: 'column', minH: 0 })
+const tabPanelClass    = css({ minH: 0 })
+const contentStackClass = css({ minH: 0 })
+</script>
+```
+
+**Tab CSS overrides are global — do NOT add per-page scoped styles.**
+
+All tab overrides live in `app/assets/css/pixel.css` (qontak-prototype) and apply automatically to every `MpTabs` instance:
+
+```css
+.mp-tab-list__root { height: fit-content; }
+.mp-tab-list__list { padding-inline: var(--mp-spacing-6); padding-block: 0; }
+.mp-tab-selected-border { height: 3px; }
+.mp-tab-list__list [role='tab']:not([aria-selected='true']):hover { color: var(--mp-colors-text-link); }
+.mp-tab-list__list [aria-selected='true']:hover .mp-tab-selected-border { background-color: var(--mp-colors-border-selected); }
+```
+
+**Key rules:**
+- `MpTabs` gets `flexGrow: 1, minH: 0` — fills remaining page height
+- `contentAreaClass` wrapper needs `p: 0, overflow: hidden` override (`pageSurfaceClass`) — tabs handle their own padding
+- Each `MpTabPanel` adds its own `p="6"` via the content flex inside it
+- `tabListClass` only zeros the bottom margin Pixel adds to its inner `div` — padding is handled globally, do NOT add `px: 6` here
+- Do NOT add `:deep(.mp-tab-list__*)` in page scoped styles — it will conflict with the global rules
 
 ## Card / panel surface
 
 When content sits inside a card (most views do):
-
 - Background: white (`Color/Background/stage`).
 - Border: `Color/Border/default` 1px, OR borderless if the card is full-width and contrast with `surface` bg is sufficient.
 - Radius: `pxl-radii-md` 6 — or up to `pxl-radii-lg` (8–12) for top-level summary cards. Stay consistent within a screen.
@@ -143,7 +200,6 @@ When content sits inside a card (most views do):
 ## Page footer / floating action bar (when present)
 
 Forms and edit screens use a sticky bottom action bar:
-
 - Position: sticky at content area bottom, OR pinned to viewport bottom for long forms.
 - Background: white, top border `Color/Border/default` 1px.
 - Padding: `pxl-space-md` 16 vertical, `pxl-space-xl` 24 horizontal.

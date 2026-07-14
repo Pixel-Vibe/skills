@@ -1,5 +1,8 @@
 # Confirmation
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 Asking the user "are you sure?" before an action with consequences. Used for destructive, irreversible, or financially significant actions.
 
 > **Note: this reference is a starting draft.** If you have specific confirmation patterns from existing Mekari products (Expense reject confirm, Talenta offboard confirm, Qontak archive confirm), enrich this file with the concrete copy and action labels. Treat the rules below as the minimum bar.
@@ -7,14 +10,12 @@ Asking the user "are you sure?" before an action with consequences. Used for des
 ## When to use this pattern
 
 Yes for:
-
 - **Destructive**: delete, permanently archive, cancel a transaction, terminate an employee.
 - **Irreversible**: submit a payroll batch, send out invoices, publish to customers.
 - **Financially significant**: approve a payment ≥ threshold, top up balance, change subscription plan.
 - **Affects other people**: reassign a deal, change role, remove access.
 
 No (do not show a confirm) for:
-
 - Standard form submissions with normal undo paths.
 - Filter changes, sort changes, navigation.
 - Anything the user can trivially undo from the same screen.
@@ -23,12 +24,12 @@ Friction is a tool. Use it precisely.
 
 ## Variants
 
-| Stakes                                   | Variant                                 |
-| ---------------------------------------- | --------------------------------------- |
-| Moderate (most "Are you sure?")          | Modal dialog                            |
+| Stakes | Variant |
+|---|---|
+| Moderate (most "Are you sure?") | Modal dialog |
 | Low (a small action, but reversible-ish) | Inline confirm in a dropdown or popover |
-| Very high stakes                         | Type-to-confirm modal                   |
-| Quick destructive in a list              | Undo toast (no upfront confirm)         |
+| Very high stakes | Type-to-confirm modal |
+| Quick destructive in a list | Undo toast (no upfront confirm) |
 
 ## Variant A: Modal dialog (default)
 
@@ -44,15 +45,50 @@ Friction is a tool. Use it precisely.
 └─────────────────────────────────────────────┘
 ```
 
-### Anatomy
+### Pixel component
 
-- Backdrop: `rgba(0,0,0,0.4)`, click closes (only for non-destructive confirms; for destructive, require explicit cancel).
-- Modal: width ~480px, max-width 90vw. White bg, `pxl-radii-md` 6, modal-level elevation (this is a floating layer).
-- **Vertical position: `y=80px` from the top of the viewport.** Do not center vertically — top-anchored at 80px keeps it in the user's natural reading area and avoids the modal jumping when content height changes.
-- Padding: `pxl-space-xl` 24 all sides.
+Use `MpModal` from `@mekari/pixel3`. Never build a custom overlay or `<Teleport>` div.
+
+```vue
+<MpModal
+  id="modal-confirm"
+  :is-open="isOpen"
+  size="md"
+  is-close-on-esc
+  is-close-on-overlay-click
+  @close="onClose"
+>
+  <MpModalContent :style="{ marginTop: '80px' }">
+    <MpModalHeader>
+      Delete this team?
+      <MpModalCloseButton />
+    </MpModalHeader>
+    <MpModalBody>
+      <!-- body copy + optional error banner -->
+    </MpModalBody>
+    <MpModalFooter>
+      <MpFlex justify="flex-end" gap="3">
+        <MpButton variant="ghost" @click="onClose">Cancel</MpButton>
+        <MpButton variant="primary" :style="{ backgroundColor: 'var(--mp-colors-background-danger-bold)' }" @click="onConfirm">Delete</MpButton>
+      </MpFlex>
+    </MpModalFooter>
+  </MpModalContent>
+  <MpModalOverlay />
+</MpModal>
+```
+
+Imports needed:
+```ts
+import { MpModal, MpModalContent, MpModalHeader, MpModalBody, MpModalFooter, MpModalOverlay, MpModalCloseButton, MpFlex, MpButton } from '@mekari/pixel3'
+```
+
+### Anatomy
+- Backdrop: handled by `MpModalOverlay`. Use `is-close-on-overlay-click` for non-destructive; omit it for destructive so the user must explicitly cancel.
+- Size: `md`. Never hand-code a width.
+- **Vertical position: `y=80px` from the top of the viewport.** Do not use `is-centered` — apply `marginTop: '80px'` on `MpModalContent` directly. Top-anchored at 80px keeps it in the user's natural reading area and avoids jumping when content height changes.
+- Padding: handled by `MpModalHeader`, `MpModalBody`, `MpModalFooter` — do not add extra padding.
 
 ### Header
-
 - Title `Heading/H3` 16 Semibold, `Color/Text/default`.
 - Title is a **question or a clear statement of consequence** — not "Confirm" or "Are you sure?".
   - ✅ "Reject this request?"
@@ -63,7 +99,6 @@ Friction is a tool. Use it precisely.
 - Close `×` icon top-right.
 
 ### Body
-
 - `Label/Regular` 14, `Color/Text/default`.
 - Describe **what will happen** in plain language, including:
   1. What changes.
@@ -72,20 +107,18 @@ Friction is a tool. Use it precisely.
 - Examples:
   - ✅ "This will return the request to the employee with a note. They can revise and resubmit."
   - ✅ "Agung will lose access to all expense data immediately. This can be restored within 30 days."
-  - ❌ "This action cannot be undone." (vague — what action, undone how?)
+  - ❌ "This action cannot be undone."  (vague — what action, undone how?)
 
 ### Footer
-
 - Right-aligned cluster: Cancel + primary action button.
 - **Gap between action buttons: `pxl-space-sm` 12.** Always use the token — do not hardcode 12px.
-- **Cancel**: outline or text-link button, `Label/Semibold` 14.
+- **Cancel**: always `variant="ghost"`. Never secondary, never textLink, never outline.
 - **Primary action**: solid button. Color depends on action type:
   - Destructive (delete, reject, remove): `Color/Background/danger-bold` (`#C33E35`) bg, white text. Label is the verb: "Delete", "Reject", "Remove access".
   - Non-destructive (submit, approve, publish): `Color/Background/brand-bold` blue.
   - Never use generic "OK" or "Confirm" — always the specific verb.
 
 ### Focus
-
 - Focus lands on **Cancel** by default, not the primary action. Hitting Enter accidentally shouldn't destroy data.
 - Escape closes the modal (= Cancel).
 
@@ -135,7 +168,7 @@ For very high stakes (deleting a workspace, permanently removing all employee da
 For quick destructive actions where the user is likely correct (archiving notifications, removing chips, deleting a draft).
 
 - Perform the action immediately.
-- Show a toast bottom-right: "1 item archived. Undo" (Undo as text link).
+- Show a toast bottom-right: "1 item archived.   Undo" (Undo as text link).
 - Toast persists ~7 seconds, then dismisses.
 - Undo restores the state.
 
@@ -143,14 +176,14 @@ Don't combine variants — either confirm upfront or let undo handle it, not bot
 
 ## Copy patterns
 
-| Action             | Title                          | Body opener                               |
-| ------------------ | ------------------------------ | ----------------------------------------- |
-| Delete             | "Delete this [entity]?"        | "This permanently removes…"               |
-| Reject             | "Reject this [entity]?"        | "This will return…" or "This notifies…"   |
-| Archive            | "Archive this [entity]?"       | "Archived items can be restored from…"    |
-| Remove access      | "Remove access for [Name]?"    | "[Name] will lose access to…"             |
-| Cancel transaction | "Cancel this transaction?"     | "The pending amount will be returned to…" |
-| Submit payroll     | "Submit payroll for [period]?" | "This locks the period and notifies…"     |
+| Action | Title | Body opener |
+|---|---|---|
+| Delete | "Delete this [entity]?" | "This permanently removes…" |
+| Reject | "Reject this [entity]?" | "This will return…" or "This notifies…" |
+| Archive | "Archive this [entity]?" | "Archived items can be restored from…" |
+| Remove access | "Remove access for [Name]?" | "[Name] will lose access to…" |
+| Cancel transaction | "Cancel this transaction?" | "The pending amount will be returned to…" |
+| Submit payroll | "Submit payroll for [period]?" | "This locks the period and notifies…" |
 
 ## Loading and error states during confirmation
 
@@ -168,7 +201,6 @@ Don't combine variants — either confirm upfront or let undo handle it, not bot
 ## Output contract for this pattern
 
 When you ship a confirmation:
-
 - Variant chosen with reasoning.
 - Title copy (specific question, not generic).
 - Body copy explaining what happens, who's affected, reversibility.

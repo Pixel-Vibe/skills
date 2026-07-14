@@ -1,9 +1,11 @@
 # Detail view
 
+> **Pixel MCP validation gate** — Before generating code from this reference, validate every Pixel component via `get-component("<name>")` on the Pixel MCP. This file defines anatomy, placement, and taste rules. MCP is the source of truth for current props and slot API. If MCP output conflicts with this file → trust MCP, note the discrepancy.
+
+
 A page showing one record with many fields. Anchored example: Transaction detail in Expense, Employee detail in Talenta, Customer detail in Qontak.
 
 ## When to use this pattern
-
 - The user navigated into a single entity to inspect it.
 - The screen is read-first; edits happen via dedicated action buttons (Edit, Approve, Reject) or a separate edit page, not inline.
 - The data is mostly key-value pairs, with some embedded media (receipts, attachments) and a status/audit section.
@@ -79,7 +81,6 @@ This is the heart of the pattern.
 ## Sectioning a long detail view
 
 If the entity has 20+ fields, split into multiple cards stacked vertically, each with its own H2:
-
 - `Transaction details`
 - `Approval history`
 - `Linked documents`
@@ -111,7 +112,6 @@ A detail view's inner card can have empty sub-sections (e.g. "Attachments" with 
 ## Output contract for this pattern
 
 When you ship a detail view:
-
 - Label column width is documented (e.g. "180px").
 - Every status field includes actor + timestamp + timezone.
 - Null-value behavior is specified.
